@@ -36,6 +36,7 @@ function Form(props) {
         onChange={handleChange}
       />
       <input type="button" value="Submit" onClick={submitForm} />
+
     </form>
   );
   
