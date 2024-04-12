@@ -91,3 +91,17 @@ app.post("/users", (req, res) => {
 });
 
 
+
+//my code
+const removeUser = (user) => {
+  users["users_list"].pop(user);
+  return user;
+};
+
+app.post("/users", (req, res) => {
+  const userToDel = req.body;
+  removeUser(userToDel);
+  res.send();
+});
+
+
