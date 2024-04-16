@@ -35,6 +35,7 @@ const users = {
 
   
   const findUserByName = (name) => {
+    console.log("running name")
     return users["users_list"].filter(
       (user) => user["name"] === name
     );
@@ -50,6 +51,25 @@ const users = {
       res.send(users);
     }
   });
+
+  // const findUserByJob = (job) => {
+  //   console.log("running job")
+  //   return users["users_list"].filter(
+  //     (user) => user["job"] === job
+  //   );
+  // };
+  
+  // app.get("/users", (req, res) => {
+  //   const job = req.query.job;
+  //   if (job != undefined) {
+  //     let result = findUserByJob(job);
+  //     result = { users_list: result };
+  //     res.send(result);
+  //   } else {
+  //     res.send(users);
+  //   }
+  // });
+
 
   const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
@@ -101,6 +121,10 @@ app.delete("/users/:id", (req, res) => {
     res.status(404).send("404, User: " + userIdToDel + " not found")
   }
 });
+
+
+
+
 
 app.get("/users", (req, res) => {
   res.send(users);
