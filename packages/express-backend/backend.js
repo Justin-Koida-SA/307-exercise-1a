@@ -91,17 +91,30 @@ app.post("/users", (req, res) => {
 });
 
 
-
 //my code
-const removeUser = (user) => {
-  users["users_list"].pop(user);
-  return user;
+const findUserByIdx = (id) =>{
+  return users["users_list"].findIndex((user) => user["id"] === id);
+
+};
+const removeUser = (userID) => {
+  const idx = findUserByIdx(userID);
+  //console.log("Index found: " + idx)
+  if(idx > -1){
+    users["users_list"].splice(idx, 1)
+    return true;
+  }
+  return false;
 };
 
-app.post("/users", (req, res) => {
-  const userToDel = req.body;
-  removeUser(userToDel);
-  res.send();
+app.delete("/users/:id", (req, res) => {
+  //console.log("User list:", JSON.stringify(users["users_list"]));
+  const userIdToDel = req.params.id;
+  if(removeUser(userIdToDel)){
+    res.send("User ID: " + userIdToDel + " deleted.");
+    console.log("Deleted user:", userIdToDel);
+  }else{
+    res.status(404).send("404, User: " + userIdToDel + " not found")
+  }
 });
 
 
