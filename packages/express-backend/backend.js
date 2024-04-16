@@ -1,6 +1,6 @@
 import express from "express";
 const app = express();
-const port = 8008;
+const port = 8000;
 
 app.use(express.json());
 
@@ -56,7 +56,7 @@ const users = {
   };
   
   app.get("/users", (req, res) => {
-  const name = req.query.name;
+    const name = req.query.name;
     if (name != undefined) {
       let result = findUserByName(name);
       result = { users_list: result };
@@ -66,8 +66,8 @@ const users = {
     }
   });
 
-const findUserById = (id) =>
-users["users_list"].find((user) => user["id"] === id);
+  const findUserById = (id) =>
+  users["users_list"].find((user) => user["id"] === id);
 
 app.get("/users/:id", (req, res) => {
   const id = req.params["id"]; //or req.params.id
