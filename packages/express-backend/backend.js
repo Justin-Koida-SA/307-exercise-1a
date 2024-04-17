@@ -88,7 +88,14 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
+const addId = (user) =>{
+  const id = Math.floor(Math.random() *(1000000))
+  user.id = id.toString()
+
+};
+
 const addUser = (user) => {
+  addId(user)
   users["users_list"].push(user);
   return user;
 };
