@@ -95,8 +95,12 @@ const addUser = (user) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
+  const addedUser = addUser(userToAdd);
+  if (addedUser) {
+    res.status(203).send({ message: "Created a User", user: addedUser });
+} else {
+    res.status(500).send({ message: "Failed to add user" });
+}
 });
 
 
