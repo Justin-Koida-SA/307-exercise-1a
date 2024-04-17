@@ -27,10 +27,13 @@ import Form from "./Form";
 
       function updateList(person) { 
         postUser(person)
-          .then(() => setCharacters([...characters, person]))
-          .catch((error) => {
-            console.log(error);
-          })
+          .then((added) => {
+            console.log("added: " + person)
+            setCharacters([...characters, added])
+        })
+        .catch((error) => {
+          console.log(error);
+        })
       }
 
       function fetchUsers() {
@@ -38,16 +41,28 @@ import Form from "./Form";
         return promise;
       }
       function postUser(person) {
-        const promise = fetch("Http://localhost:8000/users", {
+        const promise = fetch("http://localhost:8000/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(person),
-        });
-    
-        return promise;
+        })
+        return (promise
+        .then((res) => {
+          console.log(res)
+          console.log("Status of res: "+ res.status)
+          if(res.status == 201){
+            return res.json();
+          } else{
+            throw new Error ("failed to create user: " + res.status);
+          }}).catch((error) =>{
+            console.log(error)
+        })
+        );
       }
+
+      
 
   
       return (
