@@ -14,21 +14,32 @@ import Form from "./Form";
         .then((json) => setCharacters(json["users_list"]))
         .catch((error) => { console.log(error); });
     }, [] );
-    
-      function removeOneCharacter(index) {
-        const updated = characters.filter((character, i) => {
-          return i !== index;
+
+    function removeOneCharacter(index) {
+      const promise = fetch("http://localhost:8000/users", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(person),
         });
-        setCharacters(updated);
+    
+        return promise;
       }
-      // function updateList(person) {
-      //   setCharacters([...characters, person]);
+    
+      // function removeOneCharacter(index) {
+      //   const updated = characters.filter((character, i) => {
+      //     return i !== index;
+      //   });
+      //   setCharacters(updated);
       // }
+  
 
       function updateList(person) { 
         postUser(person)
           .then((res) => {
             if(res.status == 201){
+              console.log(res)
               setCharacters([...characters, person]);
           }else{
             throw new Error ("failed to create user with status: " + res.status);
@@ -50,7 +61,7 @@ import Form from "./Form";
           },
           body: JSON.stringify(person),
         });
-    
+
         return promise;
       }
 
