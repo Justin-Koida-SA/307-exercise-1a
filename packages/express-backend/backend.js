@@ -130,7 +130,7 @@ app.delete("/users/:id", (req, res) => {
   //console.log("User list:", JSON.stringify(users["users_list"]));
   const userIdToDel = req.params.id;
   if(removeUser(userIdToDel)){
-    res.send("User ID: " + userIdToDel + " deleted.");
+    res.send(userIdToDel);
     console.log("Deleted user:", userIdToDel);
   }else{
     res.status(404).send("404, User: " + userIdToDel + " not found")

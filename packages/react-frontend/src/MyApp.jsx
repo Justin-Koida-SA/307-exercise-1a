@@ -15,32 +15,40 @@ import Form from "./Form";
         .catch((error) => { console.log(error); });
     }, [] );
 
-    function removeOneCharacter(index) {
-      const promise = fetch("http://localhost:8000/users", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(person),
-        });
+    function removeOneCharacter(Id, index) {
+      const promise = fetch(`http://localhost:8000/users/${Id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then(res =>{
+        if(res.ok){
+          delUser(index)
+        }else{
+          throw new Error ("failed to delete user with status: " + res.status);
+        }
+      }).catch((error) => {
+        console.log(error);
+      })
+    }
+
+    function delUser(index) {
+      const updated = characters.filter((character, i) => {
+            return i !== index;
+          });
+          setCharacters(updated);
     
-        return promise;
       }
-    
-      // function removeOneCharacter(index) {
-      //   const updated = characters.filter((character, i) => {
-      //     return i !== index;
-      //   });
-      //   setCharacters(updated);
-      // }
   
 
       function updateList(person) { 
         postUser(person)
           .then((res) => {
             if(res.status == 201){
-              console.log(res.json())
-              setCharacters([...characters, person]);
+              res.json().then(newUser =>{
+              setCharacters([...characters, newUser]);
+            });
           }else{
             throw new Error ("failed to create user with status: " + res.status);
           }})
