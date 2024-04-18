@@ -90,7 +90,10 @@ app.get("/users/:id", (req, res) => {
 
 const addId = (user) =>{
   const id = Math.floor(Math.random() *(1000000))
-  user.id = id.toString()
+  if(findUserById(id) !== undefined){
+    return addId(user)
+  }
+    user.id = id.toString()
 
 };
 
