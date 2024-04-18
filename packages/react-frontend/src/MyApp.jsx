@@ -39,7 +39,7 @@ import Form from "./Form";
         postUser(person)
           .then((res) => {
             if(res.status == 201){
-              console.log(res)
+              console.log(res.json())
               setCharacters([...characters, person]);
           }else{
             throw new Error ("failed to create user with status: " + res.status);
@@ -61,7 +61,7 @@ import Form from "./Form";
           },
           body: JSON.stringify(person),
         });
-
+    
         return promise;
       }
 
