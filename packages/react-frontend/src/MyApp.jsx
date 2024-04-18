@@ -23,7 +23,7 @@ import Form from "./Form";
         },
       })
       .then(res =>{
-        if(res.ok){
+        if(res.status == 204){
           delUser(index)
         }else{
           throw new Error ("failed to delete user with status: " + res.status);
@@ -62,7 +62,7 @@ import Form from "./Form";
         return promise;
       }
       function postUser(person) {
-        const promise = fetch("Http://localhost:8000/users", {
+        const promise = fetch("http://localhost:8000/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
