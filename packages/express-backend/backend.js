@@ -88,7 +88,17 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
+const addId = (user) =>{
+  const id = Math.floor(Math.random() *(1000000))
+  if(findUserById(id) !== undefined){
+    return addId(user)
+  }
+    user.id = id.toString()
+
+};
+
 const addUser = (user) => {
+  addId(user)
   users["users_list"].push(user);
   return user;
 };
@@ -97,9 +107,9 @@ app.post("/users", (req, res) => {
   const userToAdd = req.body;
   const addedUser = addUser(userToAdd);
   if (addedUser) {
-    res.status(201).send({ message: "Created a User", user: addedUser });
+    res.status(201).send(addedUser);
 } else {
-    res.status(500).send({ message: "Failed to add user" });
+    res.status(500).send("Failed to add user");
 }
 });
 
@@ -123,7 +133,7 @@ app.delete("/users/:id", (req, res) => {
   //console.log("User list:", JSON.stringify(users["users_list"]));
   const userIdToDel = req.params.id;
   if(removeUser(userIdToDel)){
-    res.send("User ID: " + userIdToDel + " deleted.");
+    res.status(204).send(userIdToDel);
     console.log("Deleted user:", userIdToDel);
   }else{
     res.status(404).send("404, User: " + userIdToDel + " not found")

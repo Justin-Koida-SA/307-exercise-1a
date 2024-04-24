@@ -14,22 +14,41 @@ import Form from "./Form";
         .then((json) => setCharacters(json["users_list"]))
         .catch((error) => { console.log(error); });
     }, [] );
+
+    function removeOneCharacter(Id, index) {
+      const promise = fetch(`http://localhost:8000/users/${Id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then(res =>{
+        if(res.status == 204){
+          delUser(index)
+        }else{
+          throw new Error ("failed to delete user with status: " + res.status);
+        }
+      }).catch((error) => {
+        console.log(error);
+      })
+    }
+
+    function delUser(index) {
+      const updated = characters.filter((character, i) => {
+            return i !== index;
+          });
+          setCharacters(updated);
     
-      function removeOneCharacter(index) {
-        const updated = characters.filter((character, i) => {
-          return i !== index;
-        });
-        setCharacters(updated);
       }
-      // function updateList(person) {
-      //   setCharacters([...characters, person]);
-      // }
+  
 
       function updateList(person) { 
         postUser(person)
           .then((res) => {
             if(res.status == 201){
-              setCharacters([...characters, person]);
+              res.json().then(newUser =>{
+              setCharacters([...characters, newUser]);
+            });
           }else{
             throw new Error ("failed to create user with status: " + res.status);
           }})
@@ -43,7 +62,7 @@ import Form from "./Form";
         return promise;
       }
       function postUser(person) {
-        const promise = fetch("Http://localhost:8000/users", {
+        const promise = fetch("http://localhost:8000/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
