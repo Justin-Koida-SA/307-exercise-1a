@@ -8,44 +8,6 @@ const port = 8000;
 app.use(cors());
 app.use(express.json());
 
-const users = {
-  users_list: [
-    {
-      id: "xyz789",
-      name: "Charlie",
-      job: "Janitor"
-    },
-    {
-      id: "abc123",
-      name: "Mac",
-      job: "Bouncer"
-    },
-    {
-      id: "ppp222",
-      name: "Mac",
-      job: "Professor"
-    },
-    {
-      id: "yat999",
-      name: "Dee",
-      job: "Aspring actress"
-    },
-    {
-      id: "zap555",
-      name: "Dennis",
-      job: "Bartender"
-    }
-  ]
-};
-
-
-  
-  const findUserByName = (name) => {
-    console.log("running name")
-    return users["users_list"].filter(
-      (user) => user["name"] === name
-    );
-  };
   
   app.get("/users", async (req, res) => {
     const name = req.query["name"];
@@ -58,11 +20,13 @@ const users = {
       res.status(500).send("An error ocurred in the server.");
     }
   });
-  
 
-
-  const findUserById = (id) =>
-  users["users_list"].find((user) => user["id"] === id);
+  app.post("/users", async (req, res) => {
+    const user = req.body;
+    const savedUser = await userServices.addUser(user);
+    if (savedUser) res.status(201).send(savedUser);
+    else res.status(500).end();
+  });
 
   app.get("/users/:id", async (req, res) => {
     const id = req.params["id"];
@@ -74,62 +38,71 @@ const users = {
     }
   });
 
-const addId = (user) =>{
-  const id = Math.floor(Math.random() *(1000000))
-  if(findUserById(id) !== undefined){
-    return addId(user)
-  }
-    user.id = id.toString()
-
-};
-
-const addUser = (user) => {
-  addId(user)
-  users["users_list"].push(user);
-  return user;
-};
-
-app.post("/users", async (req, res) => {
-  const user = req.body;
-  const savedUser = await userServices.addUser(user);
-  if (savedUser) res.status(201).send(savedUser);
-  else res.status(500).end();
-});
+  app.delete("/users/:id", async (req, res) => {
+    try{
+      const userIdToDel = req.params["id"];
+      console.log(userIdToDel)
+      const delUser = await userServices.removeUser(userIdToDel);
+      if(delUser){
+        res.status(204).send();
+      }else{
+        res.status(404).send("404, User not found");
+      }}catch (error) {
+        console.error("Error during deletion:", error);
+        res.status(500).send("Internal Server Error");
+      }
+    });
 
 
-//my code
-const findUserByIdx = (id) =>{
-  return users["users_list"].findIndex((user) => user["id"] === id);
+//   const findUserByName = (name) => {
+//     console.log("running name")
+//     return users["users_list"].filter(
+//       (user) => user["name"] === name
+//     );
+//   };
+  
 
-};
-const removeUser = (userID) => {
-  const idx = findUserByIdx(userID);
-  //console.log("Index found: " + idx)
-  if(idx > -1){
-    users["users_list"].splice(idx, 1)
-    return true;
-  }
-  return false;
-};
+//   const findUserById = (id) =>
+//   users["users_list"].find((user) => user["id"] === id);
 
-app.delete("/users/:id", (req, res) => {
-  //console.log("User list:", JSON.stringify(users["users_list"]));
-  const userIdToDel = req.params.id;
-  if(removeUser(userIdToDel)){
-    res.status(204).send(userIdToDel);
-    console.log("Deleted user:", userIdToDel);
-  }else{
-    res.status(404).send("404, User: " + userIdToDel + " not found")
-  }
-});
+
+
+// const addId = (user) =>{
+//   const id = Math.floor(Math.random() *(1000000))
+//   if(findUserById(id) !== undefined){
+//     return addId(user)
+//   }
+//     user.id = id.toString()
+
+// };
+
+// const addUser = (user) => {
+//   addId(user)
+//   users["users_list"].push(user);
+//   return user;
+// };
 
 
 
 
+// //my code
+// const findUserByIdx = (id) =>{
+//   return users["users_list"].findIndex((user) => user["id"] === id);
 
-app.get("/users", (req, res) => {
-  res.send(users);
-});
+// };
+// const removeUser = (userID) => {
+//   const idx = findUserByIdx(userID);
+//   //console.log("Index found: " + idx)
+//   if(idx > -1){
+//     users["users_list"].splice(idx, 1)
+//     return true;
+//   }
+//   return false;
+// };
+
+// app.get("/users", (req, res) => {
+//   res.send(users);
+// });
 
 
 app.get("/", (req, res) => {
